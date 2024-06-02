@@ -1,0 +1,32 @@
+import zipfile
+import os
+import sys
+
+def unzip_file(zip_file_path, extract_to='./data/processed/'):
+    """
+    Unzip a zip file to the specified directory.
+
+    :param zip_file_path: Path to the zip file.
+    :param extract_to: Directory to extract files to. Default is './data/processed/'.
+    """
+    if not os.path.exists(zip_file_path):
+        print(f"The file {zip_file_path} does not exist.")
+        return
+    
+    # Ensure the extraction directory exists
+    os.makedirs(extract_to, exist_ok=True)
+
+    with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+        zip_ref.extractall(extract_to)
+        print(f"Extracted all files to {extract_to}")
+
+def main():
+    if len(sys.argv) != 2:
+        print("Usage: python unzip_dataset.py <path_to_zip_file>")
+        sys.exit(1)
+    
+    zip_file_path = sys.argv[1]
+    unzip_file(zip_file_path)
+
+if __name__ == "__main__":
+    main()
