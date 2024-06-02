@@ -2,7 +2,10 @@ import zipfile
 import os
 import sys
 
-def unzip_file(zip_file_path, extract_to='./data/processed/'):
+DEFAULT_ZIP_PATH = './data/zip/amex-1M_binary-dataset-[intents-permissions-apicalls].zip'
+DEFAULT_EXTRACT_PATH = './data/processed/'
+
+def unzip_file(zip_file_path, extract_to=DEFAULT_EXTRACT_PATH):
     """
     Unzip a zip file to the specified directory.
 
@@ -21,11 +24,11 @@ def unzip_file(zip_file_path, extract_to='./data/processed/'):
         print(f"Extracted all files to {extract_to}")
 
 def main():
-    if len(sys.argv) != 2:
-        print("Usage: python unzip_dataset.py <path_to_zip_file>")
+    if len(sys.argv) > 2:
+        print("Usage: python unzip_dataset.py [<path_to_zip_file>]")
         sys.exit(1)
     
-    zip_file_path = sys.argv[1]
+    zip_file_path = sys.argv[1] if len(sys.argv) == 2 else DEFAULT_ZIP_PATH
     unzip_file(zip_file_path)
 
 if __name__ == "__main__":
