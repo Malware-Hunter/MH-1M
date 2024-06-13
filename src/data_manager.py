@@ -1,4 +1,4 @@
-import tensorflow as tf
+# import tensorflow as tf
 class DataManager:
 
 
@@ -53,6 +53,24 @@ class DataManager:
         train_dataset = dataset.take(train_size)
         test_dataset = dataset.skip(train_size)
         return train_dataset, test_dataset
+
+    @staticmethod
+    def modify_column(df, column, feature_name='apicall'):
+
+        def modify_string(s):
+            # Replace '_' with '::'
+            s = s.lower()
+            s = s.replace('_', '::', 1)
+            s = s.replace('.', '/')
+            s = s[::-1].replace('/', '.', 1)[::-1]
+            s = s.replace(f'{feature_name}::', f'{feature_name}s::')
+            s = s.replace('()', '')
+            # Replace the last '/' with '.'
+            # modified_str = re.sub(r'/(?!.*\/)', '.', s)
+            return s
+        
+        df[column] = df[column].apply(modify_string)
+        return df
 
 
 from collections import Counter
@@ -173,4 +191,5 @@ class Balance:
             return chi2_sorted.head(MAX_FEATURES)
         
         return  chi2_sorted
+    
 
