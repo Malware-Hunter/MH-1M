@@ -1,4 +1,16 @@
 # import tensorflow as tf
+import os
+from os.path import join
+import tqdm
+
+import numpy as np
+import pandas as pd
+from pandas import DataFrame as dataframe
+
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import OneHotEncoder
+
 class DataManager:
 
 
@@ -6,7 +18,79 @@ class DataManager:
     #     # Convert the numpy arrays to tf.data.Dataset
     #     self.dataset = tf.data.Dataset.from_tensor_slices((data, labels))
     #     pass
+    @staticmethod
+    def load_MH1M(dataset_path):
+        # file_name='amex-1M_binary-dataset-[intents-permissions-apicalls].npz'
+        data = np.load(dataset_path, allow_pickle=True)
+        metadata = dataframe(data['metadata'], columns=data['metadata_columns'])
+        
+        columns_names = data['column_names']
+        sha256 = data['sha256']
+    
+        labels_ohe = OneHotEncoder().fit_transform(np.expand_dims(metadata['CLASS'].values, axis=1)).toarray()
+    
+        print(data['data'].shape, labels_ohe.shape)
+    
+        print(metadata['CLASS'].value_counts())
+        return data['data'], labels_ohe, metadata, columns_names, sha256
 
+    @staticmethod
+    def load_npz_dataset(npz_path):
+        """
+        Load a dataset saved with np.savez_compressed containing:
+          - X:            feature matrix
+          - y:            one-hot or binary labels
+          - feature_names:list of feature names
+          - labels:       raw label records (e.g. full metadata rows)
+          - labels_names: names of the metadata columns
+          - classes_names:list of class names
+          - sha256:       array of SHA256 strings
+    
+        Parameters
+        ----------
+        npz_path : str or Path
+            Path to the .npz file (without the '.npz' extension or with).
+    
+        Returns
+        -------
+        data : dict
+            {
+              'X': np.ndarray,
+              'y': np.ndarray,
+              'feature_names': np.ndarray or list,
+              'labels': np.ndarray,
+              'labels_names': np.ndarray or list,
+              'classes_names': np.ndarray or list,
+              'sha256': np.ndarray
+            }
+        """
+        # ensure extension
+        path = str(npz_path)
+        if not path.endswith('.npz'):
+            path = path + '.npz'
+    
+        loaded = np.load(path, allow_pickle=True)
+    
+        data = {
+            'X': loaded['X'],
+            'y': loaded['y'],
+            'feature_names': loaded['feature_names'],
+            'labels': loaded['labels'],
+            'labels_names': loaded['labels_names'],
+            'classes_names': loaded['classes_names'],
+            'sha256': loaded['sha256'],
+        }
+    
+        # close the file handle if it's an NpzFile
+        if hasattr(loaded, 'close'):
+            loaded.close()
+    
+        return data
+
+    @staticmethod
+    def create_class(df, threshold):
+        return np.asarray([1 if i>=threshold else 0 for i in df ])
+    
     # Define your preprocessing function
     def preprocess(self, features, num_classes):
         # features['numeric_feature'] = tf.cast(features['numeric_feature'], tf.float32) / 100.0
