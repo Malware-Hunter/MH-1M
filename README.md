@@ -54,7 +54,13 @@ Information about compressed files:
 
   
 
-Link to drive containing Feature, Labels and Metadata: https://drive.google.com/drive/folders/1XUWOvG3CkiK7KbYAOofkxl1ST4-y_hhJ
+Link to repositories containing Feature, Labels and Metadata: 
+
+[Harvard Dataverse] https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/LLHEGN
+
+[FigShare] https://figshare.com/articles/dataset/_b_MH-1M_Dataset_b_/28355897
+
+
 
   
 
@@ -97,3 +103,12 @@ Move the .npz to the data/processed folder. if not exist, create one.
 To read the dataset, use the jupytyer notebook 0-read_mh1m.ipynb.
 
 > notebooks/0-read_mh1m.ipynb.
+
+## **Primary Tools**
+
+[ADBuilder] https://github.com/Malware-Hunter/sf22-adbuilder
+
+[AMGenerator] https://github.com/Malware-Hunter/SF23-AMGenerator
+
+[AMExplorer] https://github.com/Malware-Hunter/SF23-AMExplorer
+
